@@ -19,7 +19,7 @@ app.MapGet("/", () => "Välkommen till hunddagiset");
 
 app.MapGet("/getalldogs", () =>
 {
-    var dogInfo = dogs.Select(d => $"ID {d.Id}, {d.ras} {d.namn}");
+    var dogInfo = dogs.Select(d => $"ID: {d.Id}, Hundras: {d.ras} Namn: {d.namn}");
     return "De hundarna som är incheckade för tillfället är:\n" + string.Join("\n", dogInfo);
 });
 
@@ -52,17 +52,35 @@ app.MapGet("/adddog", (string dog) =>
     return $"Hund tillagd: {dog}";
 });
 
-app.MapGet("/deletedog", (string dog) =>
+app.MapGet("/deletedog/{dogInfo}", (string dogInfo) =>
 {
-    Dog foundDog = dogs.FirstOrDefault(d => d.ras.Equals(dog, StringComparison.OrdinalIgnoreCase));
+    Dog foundDog = null;
+
+   
+    if (int.TryParse(dogInfo, out int id))
+    {
+        foundDog = dogs.FirstOrDefault(d => d.Id == id);
+    }
+
+    
+    if (foundDog == null)
+    {
+        foundDog = dogs.FirstOrDefault(d => d.ras.Equals(dogInfo, StringComparison.OrdinalIgnoreCase) ||
+                                            d.namn.Equals(dogInfo, StringComparison.OrdinalIgnoreCase));
+    }
+
+  
     if (foundDog != null)
     {
         dogs.Remove(foundDog);
-        return $"Hunden {foundDog.ras} är borttagen";
+        return $"Hunden {foundDog.namn} är borttagen";
     }
     else
-        return $"Hunden {dog} ej hittad";
+    {
+        return $"Hunden med informationen '{dogInfo}' ej hittad";
+    }
 });
+
 
 app.Run();
 
