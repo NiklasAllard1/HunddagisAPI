@@ -1,0 +1,33 @@
+@page
+@model YourNamespace.Pages.IndexModel
+@{
+    ViewData["Title"] = "Hunddagis";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunddagis</title>
+</head>
+<body>
+    <h1>Välkommen till hunddagiset</h1>
+
+    <h2>Se alla hundar</h2>
+    <button onclick="getAllDogs()">Visa alla hundar</button>
+    <div id="allDogsResult"></div>
+
+    <!-- Övriga delar av ditt HTML-gränssnitt här -->
+
+    <script>
+        function getAllDogs() {
+            fetch('/getalldogs')
+                .then(response => response.text())
+                .then(result => document.getElementById('allDogsResult').innerHTML = result);
+        }
+
+        // Övrig JavaScript-funktionalitet här
+    </script>
+</body>
+</html>

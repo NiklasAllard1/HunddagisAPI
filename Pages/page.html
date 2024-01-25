@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunddagis</title>
+</head>
+<body>
+    <h1>Välkommen till hunddagiset</h1>
+
+    <h2>Se alla hundar</h2>
+    <button onclick="getAllDogs()">Visa alla hundar</button>
+    <div id="allDogsResult"></div>
+
+    <h2>Hitta en hund</h2>
+    <label for="dogSearch">Sök efter hund:</label>
+    <input type="text" id="dogSearch" name="dogSearch">
+    <button onclick="getDog()">Sök</button>
+    <div id="getDogResult"></div>
+
+    <h2>Lägg till hund</h2>
+    <label for="addDog">Lägg till hund:</label>
+    <input type="text" id="addDog" name="addDog">
+    <button onclick="addDog()">Lägg till</button>
+    <div id="addDogResult"></div>
+
+    <h2>Ta bort hund</h2>
+    <label for="deleteDog">Ta bort hund:</label>
+    <input type="text" id="deleteDog" name="deleteDog">
+    <button onclick="deleteDog()">Ta bort</button>
+    <div id="deleteDogResult"></div>
+
+    <script>
+        function getAllDogs() {
+            fetch('/getalldogs')
+                .then(response => response.text())
+                .then(result => document.getElementById('allDogsResult').innerHTML = result);
+        }
+
+        function getDog() {
+            const dogType = document.getElementById('dogSearch').value;
+            fetch(`/getdog/${dogType}`)
+                .then(response => response.text())
+                .then(result => document.getElementById('getDogResult').innerHTML = result);
+        }
+
+        function addDog() {
+            const newDog = document.getElementById('addDog').value;
+            fetch(`/adddog?dog=${newDog}`)
+                .then(response => response.text())
+                .then(result => document.getElementById('addDogResult').innerHTML = result);
+        }
+
+        function deleteDog() {
+            const dogToDelete = document.getElementById('deleteDog').value;
+            fetch(`/deletedog?dog=${dogToDelete}`)
+                .then(response => response.text())
+                .then(result => document.getElementById('deleteDogResult').innerHTML = result);
+        }
+    </script>
+</body>
+</html>
