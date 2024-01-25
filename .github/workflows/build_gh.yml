@@ -1,32 +1,33 @@
-name: Build and Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - main  # Set a branch to deploy
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0'  # Set the .NET version
 
-    - name: Build
-      run: dotnet build -c Release
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Publish
-      run: dotnet publish -c Release -o ./publish
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./publish/pages  # Anpassa sökvägen beroende på var din publicerade webbapplikation hamnar
+      - name: Publish
+        run: dotnet publish --no-build --configuration Release --output ./output
 
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
